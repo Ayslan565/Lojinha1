@@ -3,7 +3,6 @@ package model;
 public class Conexao {
     private static Conexao instancia;
 
-    // Construtor privado impede o 'new' fora desta classe
     private Conexao() {
         System.out.println("[SISTEMA EXTERNO] Ligação ao Gateway de Pagamento estabelecida.");
     }
