@@ -35,16 +35,71 @@ Camada de Servidor (API): Representada pela classe Loja, que processa as solicit
 Para fins de simulação, o sistema utiliza armazenamento em memória através de coleções (ArrayList). A identificação de clientes e a carga do catálogo de produtos ocorrem de forma estática durante a instanciação da classe Loja.
 
 4. Implementação do Padrão Singleton
-   O padrão de projeto Singleton foi aplicado exclusivamente na classe Conexao.java, responsável pela interface com o sistema de pagamentos.
+
+O padrão de projeto Singleton foi aplicado exclusivamente na classe Conexao.java, responsável pela interface com o sistema de pagamentos.
 
 4.1 Justificativa Técnica
+
 A escolha do Singleton para este componente fundamenta-se nos seguintes pontos:
 
-Unicidade de Instância: Garante que exista apenas um ponto de acesso à comunicação com o provedor de pagamento, evitando múltiplas instâncias concorrentes.
+Unidade de Instância: Garante que exista apenas um ponto de acesso à comunicação com o provedor de pagamento, evitando múltiplas instâncias concorrentes.
+Gestão de Recursos: Reduz o overhead de memória e processamento ao evitar a criação repetitiva de objetos de conexão.
+Sincronização: O uso de métodos sincronizados (synchronized) assegura que o acesso global à instância única seja thread-safe, prevenindo condições de corrida.
 
-Gestão de Recursos: Reduz o overhead de memória e processamento ao evitar a criação repetitiva de objetos de conexão pesados.
+4.2 Detalhes da Implementação
 
-Sincronização: O uso de métodos sincronizados (synchronized) assegura que o acesso global à instância única seja thread-safe, prevenindo condições de corrida em ambientes multitarefa.
+A classe Conexao foi implementada utilizando o padrão Singleton clássico:
+
+public class Conexao {
+    private static Conexao instancia;
+
+    private Conexao(){
+        System.out.println("Conexão Externa [SUCESSO!]");
+    }
+
+    public static synchronized Conexao getInstance(){
+        if (instancia == null){
+            instancia = new Conexao();
+        }
+        return instancia;
+    }
+}
+
+    
+Características da implementação:
+Construtor privado impede instanciamento externo
+Instância armazenada em atributo estático
+Método getInstance() controla a criação e acesso
+Uso de synchronized garante segurança em ambiente concorrente
+
+4.3 Uso no Fluxo do Sistema
+
+Durante o processamento de um pedido, a aplicação utiliza a instância única da classe Conexao para realizar a comunicação com o sistema de pagamento:
+
+Conexao conexao = Conexao.getInstance();
+boolean status = conexao.processamentoPagamento(valor);
+
+Esse processo ocorre na etapa de finalização da compra (checkout), sendo responsável por determinar se o pedido será confirmado ou rejeitado.
+
+4.4 Observação Técnica
+
+Durante a análise da implementação, foi identificado que o método de processamento de pagamento não retornava corretamente o status de aprovação.
+
+Correção aplicada:
+
+public boolean processamentoPagamento(double valor){
+    if (valor > 0){
+        System.out.println("Transação aprovada por provedor externo");
+        return true;
+    }
+    return false;
+}
+
+Essa correção garante a consistência do fluxo de decisão do sistema.
+
+4.5 Conclusão
+
+A aplicação do padrão Singleton na classe Conexao assegura um controle eficiente sobre a comunicação com o sistema externo de pagamento, promovendo economia de recursos, consistência e organização arquitetural.
 
 5. Requisitos Técnicos
    Linguagem: Java.
