@@ -13,12 +13,20 @@ Produto: Define as propriedades técnicas e comerciais dos itens.
 
 Pedido: Responsável pelo agrupamento de itens e vínculo com o consumidor.
 
+Pagamento: Modela a transação financeira, tendo valor, data e status.
+
 Conexao: Classe designada para a integração com serviços externos de pagamento.
+
+Carrinho: Gerencia o estado do carrinho de compras permitidno a adição e 
 
 Pacote service: Implementa a lógica de negócio e as regras operacionais.
 
-Loja: Atua como o controlador central, gerenciando as listas de dados e fluxos de compra.
-
+Loja: Atua como a camada de serviço (API), contendo a lógica de negócio.
+É responsável por: 
+           . Gerenciar clientes e produtos
+           . Criar carrinho e pedido;
+           . Processar pagamentos
+   
 Pacote Raiz:
 
 Main: Ponto de entrada da aplicação que orquestra a execução da simulação.
@@ -38,7 +46,7 @@ Para fins de simulação, o sistema utiliza armazenamento em memória através d
 
 O padrão de projeto Singleton foi aplicado exclusivamente na classe Conexao.java, responsável pela interface com o sistema de pagamentos.
 
-4.1 Justificativa Técnica
+4.1 Justificativa
 
 A escolha do Singleton para este componente fundamenta-se nos seguintes pontos:
 
@@ -101,6 +109,7 @@ Essa correção garante a consistência do fluxo de decisão do sistema.
 
 A aplicação do padrão Singleton na classe Conexao assegura um controle eficiente sobre a comunicação com o sistema externo de pagamento, promovendo economia de recursos, consistência e organização arquitetural.
 
+
 5. Requisitos Técnicos
    Linguagem: Java.
 
@@ -111,10 +120,21 @@ Gerenciamento de Memória: Uso de coleções dinâmicas para simulação de base
 Padrões de Projeto: Singleton (Creational Pattern).
 
 6. Fluxo de Execução
-   Inicialização: O sistema carrega os dados estáticos de clientes e produtos.
+
+Inicialização: O sistema carrega os dados estáticos de clientes e produtos.
 
 Listagem: A aplicação percorre o catálogo e exibe os itens disponíveis.
 
 Identificação: O sistema valida a identidade do cliente logado.
 
+Carrinho: Um carrinho é criado e recebe os produtos selecionados.
+
+Pedido: Um pedido é gerado a partir dos itens presentes no carrinho.
+
 Processamento: Ao criar um pedido, a lógica de negócio invoca a instância única do Singleton de pagamento para processar a transação financeira.
+
+Finalização: O pedido é concluído com status "PAGO".
+
+7. Conclusão
+O sistema atende aos requisitos propostos, implementando uma simulação funcional de uma loja online.
+A utilização do padrão Singleton na comunicação com o sistema de pagamento garante eficiência, organização e controle de recursos, enquanto a estrutura orientada a objetos facilita a manutenção e evolução do sistema.
